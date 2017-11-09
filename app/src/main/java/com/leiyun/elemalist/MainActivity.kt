@@ -7,7 +7,9 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.view.Menu
 import com.flyco.tablayout.SlidingTabLayout
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,8 +26,14 @@ class MainActivity : AppCompatActivity() {
         mTabLayout = findViewById(R.id.tabLayout)
         mToolBar.title = "下午茶"
         mToolBar.setNavigationIcon(R.mipmap.ic_back)
+        setSupportActionBar(toolbar)
         mViewPager.adapter = MyViewPagerAdapter(titles, supportFragmentManager)
         mTabLayout.setViewPager(mViewPager)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_home_serach,menu)
+        return true
     }
 }
 
