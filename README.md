@@ -1,5 +1,5 @@
 # 仿饿了么商品列表页面（用Kotlin实现）
-(ps:其实用什么实现不重要，这里只是为了仿一个UI)
+(ps:其实用什么实现不重要，这里只是为了仿一个UI,闲来写的，希望给新手参考，老司机请绕道)
 
 ### 首先来看一下饿了么商品列表是什么样子
 
@@ -57,12 +57,16 @@
 需要滑动隐藏标题栏是靠app:layout_scrollFlags="scroll|enterAlways"，以下为简介，详情请搜索**layout_scrollFlags**
 
 layout_scrollFlags共有5个属性，需要Child View伴随着滚动事件而滚出或滚进屏幕首先加入"scroll"
+
 **enterAlways**:快速返回模式。
+
 **enterAlwaysCollapsed**:enterAlways的附加值,涉及最小高度
+
 **exitUntilCollapsed**:发生向上滚动事件时，Child View向上滚动退出直至最小高度，然后Scrolling View开始滚动。也就是，Child View不会完全退出屏幕。
+
 **snap**:Child View滚动比例的一个吸附效果。
 
-[SlidingTabLayout](https://github.com/H07000223/FlycoTabLayout)是使用别人造好的轮子，使用它很久了很好用很方便，能满足大多数需求，源码也很清晰需要修改也能方便。
+[SlidingTabLayout](https://github.com/H07000223/FlycoTabLayout)是使用别人造好的轮子，使用它很久了很好用很方便，能满足大多数需求，源码也很清晰需要修改也很方便。
 
 ViewPager设置app:layout_behavior="@string/appbar_scrolling_view_behavior"这是官方提供的behavior，我的理解是约定可滚动View和AppBar的折叠关系，有兴趣可以去研究下源码。
 
@@ -77,3 +81,75 @@ setSupportActionBar(toolbar)
 mViewPager.adapter = MyViewPagerAdapter(titles, supportFragmentManager)
 mTabLayout.setViewPager(mViewPager)
 ```
+
+②推荐商品和列表
+
+其实这个就很简单了，用过RecyclerView的都知道我们可以用ViewType来使其展示不同的布局
+
+```kotlin
+override fun getItemViewType(position: Int): Int {
+    return if (position == 0) {
+        R.layout.item_recommend //第一个展示推荐商品的布局
+    } else {
+        R.layout.item_test      //后续展示商品列表项
+    }
+}
+```
+
+③上滑筛选项悬停
+
+这里我们使用ItemDecoration绘制该View来实现，
+
+问：为什么？
+
+答：简单啊！
+
+问：简单吗？
+
+答：简单，因为又有轮子可以用；哈哈，看来我们不生产代码，只是代码的搬运工。
+
+这里的实现借用了[StickyRecyclerHeadersDecoration](https://github.com/timehop/sticky-headers-recyclerview)
+
+这个库的好处是不用改造RecyclerView就可以轻松实现StickyRecyclerHeaders,平时的城市列表，商品分类也可以用到。
+
+首先使你的Adapter实现StickyRecyclerHeadersAdapter<VH extends RecyclerView.ViewHolder>,header的布局即为筛选布局
+在实现getHeaderId时将第一个Item的ID返回-1就不会显示，其他商品Item的headerID统一为一个即可，这样在上滑过程中超过position==0筛选即可悬停
+```kotlin
+class TestAdapter(private var isHome: Boolean) : RecyclerView.Adapter<ViewHolder>(), StickyRecyclerHeadersAdapter<HeaderViewHolder> {
+
+
+    override fun onBindHeaderViewHolder(holder: HeaderViewHolder?, position: Int) {
+
+    }
+
+    override fun getHeaderId(position: Int): Long = if (position == 0 && isHome) -1 else 1
+
+    override fun onCreateHeaderViewHolder(parent: ViewGroup?): HeaderViewHolder {
+        val view = LayoutInflater.from(parent!!.context).inflate(R.layout.item_header, parent, false)
+        return HeaderViewHolder(view)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent!!.context).inflate(viewType, parent, false)
+        return ViewHolder(view)
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position == 0 && isHome) R.layout.item_recommend else R.layout.item_test
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
+
+    }
+
+    override fun getItemCount(): Int = 30
+
+}
+```
+
+④下拉刷新
+下拉刷新只是模拟实现，并未实现饿了么的动画，Demo中使用的是最近很火的[SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout)
+
+### 最后我们来看一下Demo实现的效果
+
+![image](https://github.com/leiyun1993/ELeMaList/raw/master/screenshot/2.gif)
