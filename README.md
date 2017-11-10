@@ -57,14 +57,10 @@
 需要滑动隐藏标题栏是靠app:layout_scrollFlags="scroll|enterAlways"，以下为简介，详情请搜索**layout_scrollFlags**
 
 layout_scrollFlags共有5个属性，需要Child View伴随着滚动事件而滚出或滚进屏幕首先加入"scroll"
-
-**enterAlways**快速返回模式。
-
-**enterAlwaysCollapsed**enterAlways的附加值,涉及最小高度
-
-**exitUntilCollapsed**发生向上滚动事件时，Child View向上滚动退出直至最小高度，然后Scrolling View开始滚动。也就是，Child View不会完全退出屏幕。
-
-**snap**Child View滚动比例的一个吸附效果。
+**enterAlways**:快速返回模式。
+**enterAlwaysCollapsed**:enterAlways的附加值,涉及最小高度
+**exitUntilCollapsed**:发生向上滚动事件时，Child View向上滚动退出直至最小高度，然后Scrolling View开始滚动。也就是，Child View不会完全退出屏幕。
+**snap**:Child View滚动比例的一个吸附效果。
 
 [SlidingTabLayout](https://github.com/H07000223/FlycoTabLayout)是使用别人造好的轮子，使用它很久了很好用很方便，能满足大多数需求，源码也很清晰需要修改也能方便。
 
