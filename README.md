@@ -150,6 +150,52 @@ class TestAdapter(private var isHome: Boolean) : RecyclerView.Adapter<ViewHolder
 ④下拉刷新
 下拉刷新只是模拟实现，并未实现饿了么的动画，Demo中使用的是最近很火的[SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout)
 
-### 最后我们来看一下Demo实现的效果
+### 我们来看一下Demo实现的效果
 
 ![image](https://github.com/leiyun1993/ELeMaList/raw/master/screenshot/2.gif)
+
+### 问题分析
+
+实际上头的实现使用ItemDecoration确实比较方便，但是无法实现点击效果。所以达不到筛选的目的，上面的那个粘性头部控件一般只适合那种只做展示的使用，
+最后为了实现这个效果我们使用了[sticky-layoutmanager](https://github.com/qiujayen/sticky-layoutmanager)
+关于上面这个控件的使用大家可以参考原作者的说明。这东西也是上班的时候突然想到此前的这个Demo的点击事件没有完善，所以特来加上这个实现。
+[sticky-layoutmanager](https://github.com/qiujayen/sticky-layoutmanager)是更改的layoutmanager所以我们要确定头实际上就是多一个ViewType,实现如下
+
+```kotlin
+override fun isStickyHeader(position: Int): Boolean {
+        return if (isHome) {
+            position == 1
+        } else {
+            position == 0
+        }
+    }
+
+override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder? {
+    val view = LayoutInflater.from(parent!!.context).inflate(viewType, parent, false)
+    return when (viewType) {
+        R.layout.item_recommend -> {
+            view.setOnClickListener {
+                Toast.makeText(parent.context, "点击", Toast.LENGTH_SHORT).show()
+            }
+            RecommendViewHolder(view)
+        }
+        R.layout.item_header -> {
+            view.findViewById<TextView>(R.id.type1).setOnClickListener { Toast.makeText(parent.context, "综合排序", Toast.LENGTH_SHORT).show() }
+            view.findViewById<TextView>(R.id.type2).setOnClickListener { Toast.makeText(parent.context, "好评优先", Toast.LENGTH_SHORT).show() }
+            view.findViewById<TextView>(R.id.type3).setOnClickListener { Toast.makeText(parent.context, "距离最近", Toast.LENGTH_SHORT).show() }
+            view.findViewById<TextView>(R.id.type4).setOnClickListener { Toast.makeText(parent.context, "筛选", Toast.LENGTH_SHORT).show() }
+            HeaderViewHolder(view)
+        }
+        else -> {
+            view.setOnClickListener {
+                Toast.makeText(parent.context, it.tag as String, Toast.LENGTH_SHORT).show()
+            }
+            ViewHolder(view)
+        }
+    }
+}
+```
+
+### 最后我们来看一下增加点击的Demo实现的效果
+
+![image](https://github.com/leiyun1993/ELeMaList/raw/master/screenshot/3.gif)
