@@ -3,13 +3,12 @@ package com.leiyun.elemalist
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.jay.widget.StickyHeadersLinearLayoutManager
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration
 
 
 /**
@@ -37,11 +36,11 @@ class TestFragment : Fragment() {
         mRecyclerView = view!!.findViewById(R.id.recycler_view)
         mRefreshLayout = view.findViewById(R.id.refreshLayout)
 
-        mRecyclerView.layoutManager = LinearLayoutManager(activity)
+        val layoutManager = StickyHeadersLinearLayoutManager<TestAdapter>(activity)
+        mRecyclerView.layoutManager = layoutManager
         val adapter = TestAdapter(position == 0)
-        val stickyRecyclerHeadersDecoration = StickyRecyclerHeadersDecoration(adapter)      //加头
-        mRecyclerView.addItemDecoration(stickyRecyclerHeadersDecoration)
         mRecyclerView.adapter = adapter
+
 
         mRefreshLayout.setOnRefreshListener {
             mRefreshLayout.finishRefresh(1500)  //模拟数据刷新
