@@ -2,13 +2,12 @@ package com.leiyun.elemalist
 
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.jay.widget.StickyHeadersLinearLayoutManager
-import com.scwang.smartrefresh.layout.SmartRefreshLayout
+import kotlinx.android.synthetic.main.fragment_test.*
 
 
 /**
@@ -17,37 +16,35 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout
 class TestFragment : Fragment() {
 
     var position = 0
-    private lateinit var mRecyclerView: RecyclerView
-    private lateinit var mRefreshLayout: SmartRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         position = arguments?.getInt("position") ?: 0
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater!!.inflate(R.layout.fragment_test, container, false)
+        return inflater.inflate(R.layout.fragment_test, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mRecyclerView = view!!.findViewById(R.id.recycler_view)
-        mRefreshLayout = view.findViewById(R.id.refreshLayout)
 
         val layoutManager = StickyHeadersLinearLayoutManager<TestAdapter>(activity)
-        mRecyclerView.layoutManager = layoutManager
+        recycler_view.layoutManager = layoutManager
         val adapter = TestAdapter(position == 0)
-        mRecyclerView.adapter = adapter
+        recycler_view.adapter = adapter
 
 
-        mRefreshLayout.setOnRefreshListener {
-            mRefreshLayout.finishRefresh(1500)  //模拟数据刷新
+        refreshLayout.setOnRefreshListener {
+            refreshLayout.finishRefresh(1500)  //模拟数据刷新
         }
-        mRefreshLayout.setOnLoadmoreListener {
-            mRefreshLayout.finishLoadmore(1500) //模拟加载更多
+
+        refreshLayout.setOnLoadMoreListener {
+            refreshLayout.finishLoadMore(1500)//模拟加载更多
         }
+
     }
 
 }// Required empty public constructor

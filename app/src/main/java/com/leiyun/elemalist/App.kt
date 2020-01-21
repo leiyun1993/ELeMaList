@@ -1,6 +1,7 @@
 package com.leiyun.elemalist
 
 import android.app.Application
+import android.graphics.Color
 import com.scwang.smartrefresh.header.MaterialHeader
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle
@@ -15,14 +16,14 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter
  * 修改时间：
  * 修改备注：
  */
-class App: Application() {
+class App : Application() {
 
     init {
-        SmartRefreshLayout.setDefaultRefreshHeaderCreater { context, layout ->
-            layout.setPrimaryColors(R.color.colorPrimary, android.R.color.white)
-            MaterialHeader(context)
+        SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, layout ->
+            layout.setPrimaryColors(context.resources.getColor(R.color.colorPrimary), Color.WHITE)
+            return@setDefaultRefreshHeaderCreator MaterialHeader(context)
         }
-        SmartRefreshLayout.setDefaultRefreshFooterCreater { context, _ ->
+        SmartRefreshLayout.setDefaultRefreshFooterCreator { context, _ ->
             ClassicsFooter(context).setSpinnerStyle(SpinnerStyle.Translate)
         }
     }

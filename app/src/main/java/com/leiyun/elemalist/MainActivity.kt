@@ -1,12 +1,12 @@
 package com.leiyun.elemalist
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.ViewPager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import com.flyco.tablayout.SlidingTabLayout
 import kotlinx.android.synthetic.main.activity_main.*
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-class MyViewPagerAdapter(private val titles: MutableList<String>, fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class MyViewPagerAdapter(private val titles: MutableList<String>, fm: FragmentManager) : androidx.fragment.app.FragmentPagerAdapter(fm) {
     override fun getItem(position: Int): Fragment {
         val fragment = TestFragment()
         val arguments = Bundle()
